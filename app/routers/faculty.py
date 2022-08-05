@@ -12,7 +12,16 @@ router = APIRouter(
 # GET
 @router.get("/", response_model=List[schemas.GetFacultyResponse])
 def get_all_faculties(db: Session=Depends(get_db), name: Optional[str] = "", limit: int = 20, skip: int = 0):
-    res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).order_by(models.Faculty.rate.desc()).limit(limit).offset(skip).all()
+    res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).order_by(models.Faculty.name).limit(limit).offset(skip).all()
+    
+    if not res:
+        raise HTTPException(status_code=404, detail="no faculties available!")
+    
+    return res;
+
+@router.get("/rating", response_model=List[schemas.GetFacultyResponse])
+def get_all_faculties(db: Session=Depends(get_db), name: Optional[str] = "", limit: int = 20, skip: int = 0):
+    res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).limit(limit).offset(skip).all()
     
     if not res:
         raise HTTPException(status_code=404, detail="no faculties available!")

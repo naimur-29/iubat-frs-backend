@@ -1,8 +1,8 @@
-"""added user, faculty & vote tables
+"""init
 
-Revision ID: a911b3c0fdc0
+Revision ID: 4894995cce53
 Revises: 
-Create Date: 2022-08-05 01:42:54.050721
+Create Date: 2022-08-05 06:20:24.019408
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a911b3c0fdc0'
+revision = '4894995cce53'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,13 +23,19 @@ def upgrade() -> None:
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('department', sa.String(), nullable=False),
     sa.Column('img_url', sa.String(), nullable=False),
-    sa.Column('rate', sa.Numeric(), server_default='0', nullable=False),
+    sa.Column('teaching_rate', sa.Numeric(), server_default='0', nullable=False),
+    sa.Column('total_teaching_rate', sa.Numeric(), server_default='0', nullable=False),
+    sa.Column('marking_rate', sa.Numeric(), server_default='0', nullable=False),
+    sa.Column('total_marking_rate', sa.Numeric(), server_default='0', nullable=False),
+    sa.Column('assignment_rate', sa.Numeric(), server_default='0', nullable=False),
+    sa.Column('total_assignment_rate', sa.Numeric(), server_default='0', nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('password', sa.String(), nullable=False),
+    sa.Column('img_url', sa.String(), server_default='default', nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('username')
@@ -37,7 +43,9 @@ def upgrade() -> None:
     op.create_table('votes',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('faculty_id', sa.Integer(), nullable=False),
-    sa.Column('vote_value', sa.Integer(), nullable=False),
+    sa.Column('teaching_value', sa.Numeric(), nullable=False),
+    sa.Column('marking_value', sa.Numeric(), nullable=False),
+    sa.Column('assignment_value', sa.Numeric(), nullable=False),
     sa.ForeignKeyConstraint(['faculty_id'], ['faculties.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('user_id', 'faculty_id')

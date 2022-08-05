@@ -30,8 +30,10 @@ class GetFacultyResponse(BaseModel):
     name: str
     department: str
     img_url: str
-    rate: float
-    total_rate: float
+    
+    teaching_rate: float
+    marking_rate: float
+    assignment_rate: float
     
     class Config:
         orm_mode = True
@@ -68,4 +70,6 @@ class PostTokenDataRequest(BaseModel):
     
 # VOTE
 class PostVoteRequest(BaseModel):
-    vote_value: float
+    teaching_value: float
+    marking_value: float
+    assignment_value: float

@@ -9,6 +9,7 @@ class User(Base):
     username = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     img_url = Column(String, nullable=False, server_default='default')
+    
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     
 class Faculty(Base):
@@ -18,12 +19,22 @@ class Faculty(Base):
     name = Column(String, nullable=False)
     department = Column(String, nullable=False)
     img_url = Column(String, nullable=False)
-    rate = Column(Numeric, nullable=False, server_default='0')
-    total_rate = Column(Numeric, nullable=False, server_default='0')
+    
+    teaching_rate = Column(Numeric, nullable=False, server_default='0')
+    total_teaching_rate = Column(Numeric, nullable=False, server_default='0')
+    
+    marking_rate = Column(Numeric, nullable=False, server_default='0')
+    total_marking_rate = Column(Numeric, nullable=False, server_default='0')
+    
+    assignment_rate = Column(Numeric, nullable=False, server_default='0')
+    total_assignment_rate = Column(Numeric, nullable=False, server_default='0')
     
 class Vote(Base):
     __tablename__ = "votes"
     
     user_id  = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True, nullable=False)
     faculty_id = Column(Integer, ForeignKey("faculties.id", ondelete="CASCADE"), primary_key=True, nullable=False)
-    vote_value = Column(Integer, nullable=False)
+    
+    teaching_value = Column(Numeric, nullable=False)
+    marking_value = Column(Numeric, nullable=False)
+    assignment_value = Column(Numeric, nullable=False)
