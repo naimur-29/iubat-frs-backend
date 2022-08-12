@@ -8,7 +8,9 @@ class User(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     username = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
+    description = Column(String, nullable=False, server_default='default')
     img_url = Column(String, nullable=False, server_default='default')
+    cover_img_url = Column(String, nullable=False, server_default='default')
     
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     
