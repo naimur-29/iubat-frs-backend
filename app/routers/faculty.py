@@ -44,7 +44,7 @@ def get_user_by_id(id: int, db: Session=Depends(get_db)):
 # POST
 @router.post("/", status_code=201, response_model=schemas.PostFacultyResponse)
 def add_faculty(faculty: schemas.PostFacultyRequest, db: Session=Depends(get_db), current_user= Depends(oauth2.get_current_user)):
-    if current_user.username == config.settings.admin_username:
+    if not current_user.username == config.settings.admin_username:
         raise HTTPException(status_code=403, detail="unauthorized!")
     
     res = new_faculty = models.Faculty(**faculty.dict())
