@@ -58,7 +58,7 @@ def add_faculty(faculty: schemas.PostFacultyRequest, db: Session=Depends(get_db)
 # DELETE
 @router.delete("/{id}", status_code=204)
 def remove_faculty_by_id(id: int, db: Session=Depends(get_db), current_user=Depends(oauth2.get_current_user)):
-    if current_user.username == config.settings.admin_username:
+    if current_user.username != config.settings.admin_username:
         raise HTTPException(status_code=403, detail="unauthorized!")
     
     res = db.query(models.Faculty).filter(models.Faculty.id == id)
