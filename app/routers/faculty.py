@@ -22,9 +22,9 @@ def get_all_faculties(db: Session=Depends(get_db), name: Optional[str] = "", lim
 @router.get("/rating", response_model=List[schemas.GetFacultyResponse])
 def get_all_faculties(db: Session=Depends(get_db), name: Optional[str] = "", dep: Optional[str] = "", limit: int = 0, skip: int = 0):
     if limit:
-        res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).filter(models.Faculty.department.contains(dep)).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).limit(limit).offset(skip).all()
+        res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).filter(models.Faculty.department.contains(dep.replace("+", " "))).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).limit(limit).offset(skip).all()
     else:
-        res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).filter(models.Faculty.department.contains(dep)).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).offset(skip).all()
+        res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).filter(models.Faculty.department.contains(dep.replace("+", " "))).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).offset(skip).all()
     
     
     if not res:

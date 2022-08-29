@@ -14,9 +14,9 @@ router = APIRouter(
 def get_users(db: Session=Depends(get_db), current_user = Depends(oauth2.get_current_user), limit: int = 0, skip: int = 0, username: Optional[str]=""):
     if current_user.username == config.settings.admin_username:
         if not limit:
-            res = db.query(models.User).filter(models.User.username.contains(username)).offset(skip).all()
+            res = db.query(models.User).filter(models.User.username.contains(username)).order_by(models.User.created_at.desc()).offset(skip).all()
         else:
-            res = db.query(models.User).filter(models.User.username.contains(username)).limit(limit).offset(skip).all()
+            res = db.query(models.User).filter(models.User.username.contains(username)).order_by(models.User.created_at.desc()).limit(limit).offset(skip).all()
         
         if not res:
             raise HTTPException(status_code=404, detail="no user found!")
