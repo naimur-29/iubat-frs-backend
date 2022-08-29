@@ -20,17 +20,26 @@ def get_all_faculties(db: Session=Depends(get_db), name: Optional[str] = "", lim
     return res;
 
 @router.get("/rating", response_model=List[schemas.GetFacultyResponse])
-def get_all_faculties(db: Session=Depends(get_db), name: Optional[str] = "", limit: int = 0, skip: int = 0):
+def get_all_faculties(db: Session=Depends(get_db), name: Optional[str] = "", dep: Optional[str] = "", limit: int = 0, skip: int = 0):
     if limit:
-        res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).limit(limit).offset(skip).all()
+        res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).filter(models.Faculty.department.contains(dep)).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).limit(limit).offset(skip).all()
     else:
-        res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).offset(skip).all()
+        res = db.query(models.Faculty).filter(models.Faculty.name.contains(name)).filter(models.Faculty.department.contains(dep)).order_by((models.Faculty.teaching_rate+models.Faculty.marking_rate+models.Faculty.assignment_rate).desc(), models.Faculty.name).offset(skip).all()
     
     
     if not res:
         raise HTTPException(status_code=404, detail="no faculties available!")
     
     return res;
+
+@router.get("/rating/len")
+def get_all_faculties(db: Session=Depends(get_db)):
+    res = db.query(models.Faculty).all()
+    
+    if not res:
+        return {"len": 0}
+    
+    return {"len": len(res)};
 
 @router.get("/{id}", response_model=schemas.GetFacultyResponse)
 def get_user_by_id(id: int, db: Session=Depends(get_db)):
